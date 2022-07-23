@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 //interfaz Heroe
 import { Hero } from '../Hero';
+//heroes falsos
+import { HEROES } from '../mock-heroes';
 
 /**
  * *Siempre se importa el decorador Component desde el core de angular, luego el decorador
@@ -22,15 +24,19 @@ import { Hero } from '../Hero';
 })
 export class HeroesComponent implements OnInit {
 
-  //propiedades
-  hero: Hero = {
-    id: 1,
-    name: "mateman"
-  };
+  //*propiedades
+  //array de heroes falsos
+  heroes: Hero[] = HEROES;
+  //heroe elegido
+  //? nota: '!' indica not null assertion, no es null esta propiedad
+  selectedHero!: Hero;
 
-  constructor() { }
+  constructor() { };
 
-  ngOnInit(): void {
+  ngOnInit(): void { };
+
+  onSelect(hero: Hero): void {
+    this.selectedHero = hero;
   }
 
 }
