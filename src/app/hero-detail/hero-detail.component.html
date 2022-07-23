@@ -1,0 +1,13 @@
+<!-- si existe un heroe elegido, mostrar esta seccion -->
+<div *ngIf="hero">
+  <!-- Mostramos el nombre del heroe, pasandolo por un pipe, asi lo transformamos para
+  que se visualice en uppercase -->
+  <h2>{{hero.name | uppercase}} Details</h2>
+  <div><span>id: </span>{{hero.id}}</div>
+  <!-- Editar heroe, enlace de datos bidireccional -->
+  <div>
+    <label for="">name: 
+      <input [(ngModel)]="hero.name" placeholder="name" type="text"/>
+    </label>
+  </div>
+</div>

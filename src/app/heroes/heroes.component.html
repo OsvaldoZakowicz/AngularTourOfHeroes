@@ -8,17 +8,8 @@
     <span class="badge">{{hero.id}} </span>{{hero.name}}
   </li>
 </ul>
-
-<!-- si existe un heroe elegido, mostrar esta seccion -->
-<div *ngIf="selectedHero">
-  <!-- Mostramos el nombre del heroe, pasandolo por un pipe, asi lo transformamos para
-  que se visualice en uppercase -->
-  <h2>{{selectedHero.name | uppercase}} Details</h2>
-  <div><span>id: </span>{{selectedHero.id}}</div>
-  <!-- Editar heroe, enlace de datos bidireccional -->
-  <div>
-    <label for="">name: 
-      <input [(ngModel)]="selectedHero.name" placeholder="name" type="text"/>
-    </label>
-  </div>
-</div>
+<!-- detalle del heroe seleccionado -->
+<!-- heroes component envia un heroe seleccionado a hero-detail component -->
+<!-- ? de donde sale el heroe seleccionado?, de: ejecutar el evento click en el <li> -->
+<!-- ? esto modifica la variable selectedHero que luego se envia a hero del componente -->
+<app-hero-detail [hero]="selectedHero"></app-hero-detail>
