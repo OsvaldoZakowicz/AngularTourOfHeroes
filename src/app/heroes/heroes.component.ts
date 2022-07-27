@@ -68,8 +68,22 @@ export class HeroesComponent implements OnInit {
    * en otras palabras:
    * *HeroService.getHeroes() debe tener alguna firma asincrona.
    */
-  getHeroes(): void {
+  /* getHeroes(): void {
     //esto es sincronico, viable por que existe un archivo con heroes simulados
     this.heroes = this.heroService.getHeroes();
+  }; */
+
+  /**
+   * *Metodo para recuperar los heroes del servicio
+   * Anteriormente obtenia los heroes de un array de forma sincrona.
+   * Ahora el servicio retorna un observable al cual debo suscribirme.
+   * *La nueva versión espera a que el 'Observable' emita una serie de héroes,
+   * *(que podría suceder ahora o varios minutos a partir de ahora). 
+   * *El método subscribe() pasa el arreglo emitido a la devolución de llamada, 
+   * *que establece la propiedad 'heroes' del componente.
+   */
+  getHeroes(): void {
+    this.heroService.getHeroes()
+      .subscribe(heroes => this.heroes = heroes);
   };
 }

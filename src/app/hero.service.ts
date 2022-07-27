@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 //interfaz Hero, y constante de heroes HEROES
 import { Hero } from './Hero';
 import { HEROES } from './mock-heroes';
+//usaremos Observable y of() de RxJS
+import { Observable, of } from 'rxjs';
 
 
 /**
@@ -35,8 +37,18 @@ export class HeroService {
   constructor() { };
 
   //retornar heroes
-  getHeroes(): Hero[] {
+  /* getHeroes(): Hero[] {
     //* NOTA: Puedo retornar directamente lo importado
     return HEROES;
-  };
+  }; */
+
+  /**
+   * *Metodo para retornar un Observable.
+   * of (HEROES) devuelve un Observable <Hero[]> que emite un valor unico,
+   * el conjunto de heroes simulados.
+   * @returns Observable <Hero[]>
+   */
+  getHeroes(): Observable<Hero[]> {
+    return of(HEROES);
+  }
 }
