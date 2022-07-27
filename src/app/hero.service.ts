@@ -5,6 +5,8 @@ import { Hero } from './Hero';
 import { HEROES } from './mock-heroes';
 //usaremos Observable y of() de RxJS
 import { Observable, of } from 'rxjs';
+//usaremos el servicio de mensajes
+import { MessageService } from './message.service';
 
 
 /**
@@ -34,7 +36,15 @@ import { Observable, of } from 'rxjs';
 })
 export class HeroService {
 
-  constructor() { };
+  /**
+   * *Constructor.
+   * Cuando se crea el HeroService, Angular inyectara el singleton MessageService
+   * en la propiedad messageService.
+   * * NOTA: Este es un escenario típico de "servicio en servicio": 
+   * *inyecta el MessageService en el HeroService que se inyecta en el HeroesComponent.
+   * @param messageService 
+   */
+  constructor(private messageService: MessageService) { };
 
   //retornar heroes
   /* getHeroes(): Hero[] {
@@ -49,6 +59,8 @@ export class HeroService {
    * @returns Observable <Hero[]>
    */
   getHeroes(): Observable<Hero[]> {
+    //*TODO: enviar un mensaje _despues_ de recuperar los heroes
+    this.messageService.add("Servicio de Heroes: Obteniendo heroes.");
     return of(HEROES);
   }
 }

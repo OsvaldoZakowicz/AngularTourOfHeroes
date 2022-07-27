@@ -5,6 +5,8 @@ import { Hero } from '../Hero';
 //import { HEROES } from '../mock-heroes'; 
 //en lugar de importar los heroes falsos, usare el servicio
 import { HeroService } from '../hero.service';
+//usaremos el servicio de mensajes
+import { MessageService } from '../message.service';
 
 /**
  * *Siempre se importa el decorador Component desde el core de angular, luego el decorador
@@ -39,7 +41,7 @@ export class HeroesComponent implements OnInit {
    * establece el parametro heroService en la instancia unica de HeroService.
    * @param heroService inyectando el servicio de heroes
    */
-  constructor(private heroService: HeroService) { };
+  constructor(private heroService: HeroService, public messageService: MessageService) { };
 
   /**
    * *lifecycle hook
@@ -56,6 +58,7 @@ export class HeroesComponent implements OnInit {
    */
   onSelect(hero: Hero): void {
     this.selectedHero = hero;
+    this.messageService.add(`Componente Heroes: heroe seleccionado: ${this.selectedHero.id}`);
   };
 
   /**

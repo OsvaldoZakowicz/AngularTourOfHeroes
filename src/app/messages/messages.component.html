@@ -1,1 +1,8 @@
-<p>messages works!</p>
+<!-- si hay mensajes que mostrar -->
+<div *ngIf="messageService.messages.length">
+  <h2>Mensages</h2>
+  <!-- boton para eliminar mensajes de la cache -->
+  <button class="clear" (click)="messageService.clear()">Eliminar</button>
+  <!-- lista de mensajes -->
+  <div *ngFor="let message of messageService.messages">{{message}}</div>
+</div>
