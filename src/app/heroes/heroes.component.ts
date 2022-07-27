@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 //interfaz Heroe
 import { Hero } from '../Hero';
 //heroes falsos
-import { HEROES } from '../mock-heroes';
+//import { HEROES } from '../mock-heroes'; 
+//en lugar de importar los heroes falsos, usare el servicio
+import { HeroService } from '../hero.service';
 
 /**
  * *Siempre se importa el decorador Component desde el core de angular, luego el decorador
@@ -25,18 +27,49 @@ import { HEROES } from '../mock-heroes';
 export class HeroesComponent implements OnInit {
 
   //*propiedades
-  //array de heroes falsos
-  heroes: Hero[] = HEROES;
+  //array para heroes falsos
+  heroes!: Hero[];
   //heroe elegido
   //? nota: '!' indica not null assertion, no es null esta propiedad
   selectedHero!: Hero;
 
-  constructor() { };
+  /**
+   * *Constructor
+   * cuando Angular crea un HeroesComponent, el sistema de inyeccion de dependencias
+   * establece el parametro heroService en la instancia unica de HeroService.
+   * @param heroService inyectando el servicio de heroes
+   */
+  constructor(private heroService: HeroService) { };
 
-  ngOnInit(): void { };
+  /**
+   * *lifecycle hook
+   * luego de que Angular construya una instancia de HeroesComponent
+   * sabra el mejor momento para recuperar los heroes del servicio.
+   */
+  ngOnInit(): void {
+    this.getHeroes();
+  };
 
+  /**
+   * *Metodo para establecer el heroe seleccionado
+   * @param hero 
+   */
   onSelect(hero: Hero): void {
     this.selectedHero = hero;
-  }
+  };
 
+  /**
+   * *Metodo para recuperar los heroes del servicio
+   * !Esto no es viable en una aplicacion real donde obtengo datos de un servidor
+   * !de forma inherentemente asincrona.
+   * HeroesComponent espera a getHeroes (al inicio en ngOnInit()) y retorna de inmediato
+   * por que disponemos de una lista local de heroes, pero en la vida real, al llamar a
+   * getHeroes() el servicio encargado de ello debe esperar a que el servidor responda!
+   * en otras palabras:
+   * *HeroService.getHeroes() debe tener alguna firma asincrona.
+   */
+  getHeroes(): void {
+    //esto es sincronico, viable por que existe un archivo con heroes simulados
+    this.heroes = this.heroService.getHeroes();
+  };
 }
