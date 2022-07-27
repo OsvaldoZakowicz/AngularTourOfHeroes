@@ -1,5 +1,12 @@
 <h1>{{title}}</h1>
-<!-- componente heroes -->
-<app-heroes></app-heroes>
+<nav>
+  <!-- routerLink es la directiva para el selector RouterLink que convierte los clics
+  del usuario en navegaciones del enrutador -->
+  <a routerLink="/dashboard">Dashboard</a>
+  <!-- ahora la ruta '/heroes' es la que muestra el componente <app-heroes> -->
+  <a routerLink="/heroes">Heroes</a>
+</nav>
+<!-- router outlet le indica al enrutador donde mostrar las vistas enrutadas -->
+<router-outlet></router-outlet>
 <!-- componente mensajes -->
 <app-messages></app-messages>

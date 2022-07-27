@@ -5,6 +5,8 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 //a donde ir luego de configurar las rutas
 import { HeroesComponent } from './heroes/heroes.component';
+//dashboard
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 /**
  * *A continuacion se configuran las rutas.
@@ -14,7 +16,11 @@ import { HeroesComponent } from './heroes/heroes.component';
  * - component: el componente que el enrutador debe crear al navegar en esa ruta.
  */
 const routes: Routes = [
-  {path: 'heroes', component: HeroesComponent},
+  //ruta por defecto
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  //rutas a otras vistas
+  { path: 'dashboard', component: DashboardComponent },
+  { path: 'heroes', component: HeroesComponent }
 ];
 
 /**
