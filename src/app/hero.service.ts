@@ -53,14 +53,21 @@ export class HeroService {
   }; */
 
   /**
-   * *Metodo para retornar un Observable.
+   * *Metodo para retornar un Observable sobre un array de heroes.
    * of (HEROES) devuelve un Observable <Hero[]> que emite un valor unico,
    * el conjunto de heroes simulados.
    * @returns Observable <Hero[]>
    */
   getHeroes(): Observable<Hero[]> {
-    //*TODO: enviar un mensaje _despues_ de recuperar los heroes
+    //TODO: enviar un mensaje _despues_ de recuperar los heroes
     this.messageService.add("Servicio de Heroes: Obteniendo heroes.");
     return of(HEROES);
+  }
+
+  getHero(id: number): Observable<Hero> {
+    //TODO: enviar un mensaje _despues_ de recuperar los heroes 
+    //TODO: RETORNA NULL >:( por alguna razon castear a Hero no ayuda
+    this.messageService.add(`HeroService: fetched hero id=${id}`);
+    return of(HEROES.find(hero => hero.id === id) as Hero);
   }
 }

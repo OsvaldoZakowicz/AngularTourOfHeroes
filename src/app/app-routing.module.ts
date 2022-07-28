@@ -3,10 +3,12 @@ import { NgModule } from '@angular/core';
 //import { CommonModule } from '@angular/common';
 //funcionalidad de enrutamiento
 import { RouterModule, Routes } from '@angular/router';
-//a donde ir luego de configurar las rutas
-import { HeroesComponent } from './heroes/heroes.component';
 //dashboard
 import { DashboardComponent } from './dashboard/dashboard.component';
+//lista de heroes
+import { HeroesComponent } from './heroes/heroes.component';
+//detalle de heroe
+import { HeroDetailComponent } from './hero-detail/hero-detail.component';
 
 /**
  * *A continuacion se configuran las rutas.
@@ -18,9 +20,12 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 const routes: Routes = [
   //ruta por defecto
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-  //rutas a otras vistas
+  //rutas a dashboard
   { path: 'dashboard', component: DashboardComponent },
-  { path: 'heroes', component: HeroesComponent }
+  //ruta a la lista de heroes
+  { path: 'heroes', component: HeroesComponent },
+  //ruta a el detalle de un heroe (parametro id)
+  { path: 'detail/:id', component: HeroDetailComponent }
 ];
 
 /**

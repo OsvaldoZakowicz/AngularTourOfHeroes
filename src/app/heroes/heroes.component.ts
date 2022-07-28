@@ -31,9 +31,6 @@ export class HeroesComponent implements OnInit {
   //*propiedades
   //array para heroes falsos
   heroes!: Hero[];
-  //heroe elegido
-  //? nota: '!' indica not null assertion, no es null esta propiedad
-  selectedHero!: Hero;
 
   /**
    * *Constructor
@@ -50,15 +47,6 @@ export class HeroesComponent implements OnInit {
    */
   ngOnInit(): void {
     this.getHeroes();
-  };
-
-  /**
-   * *Metodo para establecer el heroe seleccionado
-   * @param hero 
-   */
-  onSelect(hero: Hero): void {
-    this.selectedHero = hero;
-    this.messageService.add(`Componente Heroes: heroe seleccionado: ${this.selectedHero.id}`);
   };
 
   /**
