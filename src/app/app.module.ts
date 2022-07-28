@@ -2,6 +2,11 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 //para usar el enlace bidireccional ngModel, poner tambien en el array imports: []
 import { FormsModule } from '@angular/forms';
+//habilitar servicios http con HttpClient
+import { HttpClientModule } from '@angular/common/http';
+//usar in-memory-web-api
+import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
+import { InMemoryDataService } from './in-memory-data.service';
 
 import { AppComponent } from './app.component';
 import { HeroesComponent } from './heroes/heroes.component';
@@ -21,7 +26,16 @@ import { DashboardComponent } from './dashboard/dashboard.component';
   imports: [
     BrowserModule,
     FormsModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule,
+    /**
+     * *El HttpClientInMemoryWebApiModule module intercepta solicitudes HTTP
+     * *y retorna respuestas de servidor simuladas
+     * *debe eliminarse cuando un servidor real esta listo para recibir solicitudes
+     */
+    HttpClientInMemoryWebApiModule.forRoot(
+      InMemoryDataService, { dataEncapsulation: false }
+    )
   ],
   providers: [],
   bootstrap: [AppComponent]
