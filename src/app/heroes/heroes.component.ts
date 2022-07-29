@@ -51,21 +51,6 @@ export class HeroesComponent implements OnInit {
 
   /**
    * *Metodo para recuperar los heroes del servicio
-   * !Esto no es viable en una aplicacion real donde obtengo datos de un servidor
-   * !de forma inherentemente asincrona.
-   * HeroesComponent espera a getHeroes (al inicio en ngOnInit()) y retorna de inmediato
-   * por que disponemos de una lista local de heroes, pero en la vida real, al llamar a
-   * getHeroes() el servicio encargado de ello debe esperar a que el servidor responda!
-   * en otras palabras:
-   * *HeroService.getHeroes() debe tener alguna firma asincrona.
-   */
-  /* getHeroes(): void {
-    //esto es sincronico, viable por que existe un archivo con heroes simulados
-    this.heroes = this.heroService.getHeroes();
-  }; */
-
-  /**
-   * *Metodo para recuperar los heroes del servicio
    * Anteriormente obtenia los heroes de un array de forma sincrona.
    * Ahora el servicio retorna un observable al cual debo suscribirme.
    * *La nueva versión espera a que el 'Observable' emita una serie de héroes,
@@ -77,4 +62,37 @@ export class HeroesComponent implements OnInit {
     this.heroService.getHeroes()
       .subscribe(heroes => this.heroes = heroes);
   };
+
+  /**
+   * *Metodo para crear un heroe
+   * @param name - nombre del heroe
+   * @returns void
+   */
+   add(name: string): void {
+    //nombre sin espacios blancos al inicio y final
+    name = name.trim();
+    //nombre no vacio
+    if (!name) { return; }
+    /**
+     * llamo al servicio addHero() con un objeto parcial Hero
+     * que necesita id, m suscribo al retorno, un Heroe nuevo
+     * completo que empujo al array local del componente.
+     */
+    this.heroService.addHero({ name } as Hero)
+      .subscribe(hero => {
+        this.heroes.push(hero);
+      });
+  };
+
+  /**
+   * *Metodo para eliminar un heroe
+   * @param hero - heroe a eliminar
+   */
+  delete(hero: Hero): void {
+    //elimino el heroe de la lista local del componente.
+    this.heroes = this.heroes.filter(h => h !== hero);
+    //uso el servicio para eliminar el heroe.
+    //NOTA: No hay nada a que suscribirme, pero es necesario para que el Observable actue
+    this.heroService.deleteHero(hero).subscribe();
+  }
 }

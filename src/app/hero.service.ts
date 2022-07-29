@@ -135,6 +135,37 @@ export class HeroService {
         tap(_=> this.log(`actualizando heroe: id= ${hero.id}`)),
         catchError(this.handleError<any>(`updateHero: id= ${hero.id}`))
       );
+  };
+
+  /**
+   * *Metodo para crear heroe
+   * @param hero - heroe parcial al que agregar un id y crear en la BD
+   * @returns Observable<Hero>
+   */
+  addHero(hero: Hero): Observable<Hero> {
+    return this.http.post<Hero>(this.heroesUrl, hero, this.httpOptions)
+      .pipe(
+        tap((newHero: Hero) => this.log(`agregado heroe: w/ id= ${newHero.id}`)),
+        catchError(this.handleError<Hero>('addHero'))
+      );
+  };
+
+  /**
+   * *Metodo para eliminar heroe
+   * En este caso, necesito la url + id para encontrar el heroe a eliminar
+   * Uso las opciones http como encabezado
+   * @param hero o number - un heroe o un id de heroe
+   * @returns Observable<Hero>
+   */
+  deleteHero(hero: Hero | number): Observable<Hero> {
+    const id = typeof hero === 'number' ? hero : hero.id;
+    const url = `${this.heroesUrl}/${id}`;
+
+    return this.http.delete<Hero>(url, this.httpOptions)
+      .pipe(
+        tap(_ => this.log(`eliminado heroe id= ${id}`)),
+        catchError(this.handleError<Hero>('deleteHero'))
+      );
   }
 
   /**
