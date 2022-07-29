@@ -7,6 +7,10 @@ import { HEROES } from './mock-heroes';
 import { Observable, of } from 'rxjs';
 //usaremos el servicio de mensajes
 import { MessageService } from './message.service';
+//HttpClient y HttpHeaders
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+//para manejo de errores al hacer solicitudes http
+import { catchError, map, tap } from 'rxjs/operators';
 
 
 /**
@@ -36,38 +40,120 @@ import { MessageService } from './message.service';
 })
 export class HeroService {
 
+  //*propiedades
+  private heroesUrl: string = 'api/heroes';
+  //encabezado especial con las solicitudes de guardado Http
+  httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  };
+
   /**
    * *Constructor.
    * Cuando se crea el HeroService, Angular inyectara el singleton MessageService
    * en la propiedad messageService.
    * * NOTA: Este es un escenario típico de "servicio en servicio": 
    * *inyecta el MessageService en el HeroService que se inyecta en el HeroesComponent.
+   * *inyecta HttpClient
    * @param messageService 
    */
-  constructor(private messageService: MessageService) { };
-
-  //retornar heroes
-  /* getHeroes(): Hero[] {
-    //* NOTA: Puedo retornar directamente lo importado
-    return HEROES;
-  }; */
+  constructor(
+    private http: HttpClient,
+    private messageService: MessageService
+  ) {};
 
   /**
-   * *Metodo para retornar un Observable sobre un array de heroes.
-   * of (HEROES) devuelve un Observable <Hero[]> que emite un valor unico,
-   * el conjunto de heroes simulados.
-   * @returns Observable <Hero[]>
+   * *Metodo privado para usar MesaggeService de forma mas comoda
+   */
+  private log(message: string): void {
+    this.messageService.add(`HeroService: ${message}`);
+  };
+
+  /**
+   * *Metodo para obtener heroes del servidor simulado
+   * hago una solicitud con HttpClient normal, pero sera interceptada
+   * por in-memory-data-service.
+   * 
+   * Cada metodos HttpClient devuelven un RxJS Observable de algo.
+   * HTTP es un protocolo de solicitud/respuesta. Realiza una solicitud, 
+   * devuelve una sola respuesta.
+   * 
+   * En general, un observable puede devolver multiples valores a lo largo del tiempo.
+   * Un observable de HttpClient siempre emite un unico valor y luego se completa, 
+   * para nunca volver a emitir.
+   * 
+   * Esta llamada particular a HttpClient.get() devuelve un Observable<Hero[]>; 
+   * es decir, "un observable de un arreglo de heroes". En la práctica, 
+   * solo devolvera un unico conjunto de héroes.
+   * 
+   * HttpClient.get() devuelve el cuerpo de la respuesta como un objeto JSON sin tipo
+   * de forma predeterminada. Al aplicar el especificador de tipo opcional, <Hero[]>,
+   * se agregan capacidades de TypeScript, que reducen los errores durante el tiempo de
+   * compilación.
+   * 
+   * La API de datos del servidor determina la forma de los datos JSON. 
+   * La API de datos Tour of Heroes devuelve los datos del heroe como una matriz.
+   * 
+   * @returns Observable<Hero[]> - retorna un Observable de arreglo Heroe
    */
   getHeroes(): Observable<Hero[]> {
-    //TODO: enviar un mensaje _despues_ de recuperar los heroes
-    this.messageService.add("Servicio de Heroes: Obteniendo heroes.");
-    return of(HEROES);
+    return this.http.get<Hero[]>(this.heroesUrl)
+      .pipe(
+        //mensaje
+        tap(_=> this.log("obteniendo heroes.")),
+        //manejo de errores
+        catchError(this.handleError<Hero[]>('getHeroes', []))
+      );
   }
 
+  /**
+   * *Metodo para obtener un heroe individual
+   * @param id - id del Heroe buscado
+   * @returns Observable<Hero> - retorna un Observable de objeto Heroe
+   */
   getHero(id: number): Observable<Hero> {
-    //TODO: enviar un mensaje _despues_ de recuperar los heroes 
-    //TODO: RETORNA NULL >:( por alguna razon castear a Hero no ayuda
-    this.messageService.add(`HeroService: fetched hero id=${id}`);
-    return of(HEROES.find(hero => hero.id === id) as Hero);
+    const url: string = `${this.heroesUrl}/${id}`;
+    return this.http.get<Hero>(url)
+      .pipe(
+        tap(_=> this.log(`obteniendo heroe: id= ${id}`)),
+        catchError(this.handleError<Hero>(`getHero: id= ${id}`))
+      );
+  };
+
+  /**
+   * *Metodo para actualizar un heroe individual
+   * put() toma 3 parametros:
+   * - La url, datos a actualizar (en este caso el heroe nuevo), opciones
+   * La url no cambia, la API sabe que heroe cambiar al ver su id.
+   * La API web de heroes espera un encabezado especial en las solicitudes de guardado HTTP,
+   * Ese encabezado esta en la constante httpOptions 
+   * @param hero - heroe a actualizar
+   * @returns Observable<any>
+   */
+  updateHero(hero: Hero): Observable<any> {
+    return this.http.put(this.heroesUrl, hero, this.httpOptions)
+      .pipe(
+        tap(_=> this.log(`actualizando heroe: id= ${hero.id}`)),
+        catchError(this.handleError<any>(`updateHero: id= ${hero.id}`))
+      );
+  }
+
+  /**
+   * *Maneja operaciones Http que fallan.
+   * *Deja a la app continuar la ejecucion.
+   * @param operation - nombre de la operacion que fallo
+   * @param result - valor opcional a retornar como el resultado observable
+   */
+  private handleError<T>(operation = 'operation', result?: T) {
+    return (error: any): Observable<T> => {
+
+      // TODO: send the error to remote logging infrastructure
+      console.error(error); // log hacia la consola
+
+      // TODO: better job of transforming error for user consumption
+      this.log(`${operation} failed: ${error.message}`);
+
+      //* deja a la app mantenerse en ejecucion retornando un resultado vacio.
+      return of(result as T);
+    };
   }
 }

@@ -41,11 +41,23 @@ export class HeroDetailComponent implements OnInit {
     this.getHero();
   };
 
+  /**
+   * *Metodo para obtener un heroe individual
+   */
   getHero(): void {
+    //*id debe ser numero, pero get() retorna string | null, aplico casteo
     const id = (this.route.snapshot.paramMap.get('id') as unknown) as number;
     this.messageService.add(`id obtenido de url: ${id}`);
     this.heroService.getHero(id)
       .subscribe(hero => this.hero = hero);
+  };
+
+  /**
+   * *Metodo para guardar los cambios en un heroe
+   */
+  save(): void {
+    this.heroService.updateHero(this.hero)
+      .subscribe(() => this.goBack());
   };
 
   /**
