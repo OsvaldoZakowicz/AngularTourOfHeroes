@@ -168,6 +168,26 @@ export class HeroService {
       );
   }
 
+  searchHeroes(term: string): Observable<Hero[]> {
+    //si no recibo un termino de busqueda, retornar
+    //si recibe vacio " " con trim(" ") resulta "" lo que es false, ahi debo retornar
+    if (!term.trim()) {
+      //retorno un array vacio
+      return of([]);
+    };
+    //si hay termino de busqueda correcto
+    //formato de la url: GET api/heroes/?name=term|regex
+    return this.http.get<Hero[]>(`${this.heroesUrl}/?name=${term}`)
+      .pipe(
+        //search: Hero[], tiene el array de heroes que retorna get<Hero[]>
+        tap(search => search.length ?
+          this.log(`heroes encontrados que coinciden con ${term}`):
+          this.log(`no hay heroes que coincidan con ${term}`),
+        ),
+        catchError(this.handleError<Hero[]>('searchHeroes', []))
+      );
+  };
+
   /**
    * *Maneja operaciones Http que fallan.
    * *Deja a la app continuar la ejecucion.

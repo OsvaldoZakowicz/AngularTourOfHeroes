@@ -1,0 +1,19 @@
+<div id="search-component">
+  <h4><label for="search-box">Hero Search</label></h4>
+  <!-- input de busqueda -->
+  <!-- A medida que el usuario escribe en el cuadro de busqueda, 
+    un enlace de evento de entrada llama al el metodo search() 
+    del componente con el nuevo valor del cuadro de busqueda. -->
+  <input #searchBox id="search-box" type="text" 
+    (input)="search(searchBox.value)"/>
+  <!-- resultados de la busqueda -->
+  <ul class="search-result">
+    <!-- ngFor itera sobre un observable de Heroes al cual se suscribe -->
+    <!-- $ indica a ngFor que heroes$ es observable y no un arreglo -->
+    <!-- ngFor no puede hacer nada con un Obsrvable a menos que se filtre con " | async" lo
+    que identifica al 'AsyncPipe' de Angular y suscribe a ngFor al mismo -->
+    <li *ngFor="let hero of heroes$ | async" >
+      <a routerLink="/detail/{{hero.id}}" >{{hero.name}}</a>
+    </li>
+  </ul>
+</div>
