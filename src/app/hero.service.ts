@@ -171,6 +171,10 @@ export class HeroService {
   /**
    * *Maneja operaciones Http que fallan.
    * *Deja a la app continuar la ejecucion.
+   * ?que es <T>?, es un tipo generico de TypeScript,
+   * handleError<T> recibe dos parametros, una operacion tipo string y un resultado opcional tipo <T>
+   * de esta forma la funcion puede usarse pasando un result de cualquier tipo (objeto, any, array) y
+   * sera aceptado por la funcion. El retorno es una funcion observable generica.
    * @param operation - nombre de la operacion que fallo
    * @param result - valor opcional a retornar como el resultado observable
    */
